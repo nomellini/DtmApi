@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["WebDatamaceApi.csproj", "WebDatamaceApi/"]
+COPY ["WebDatamaceApi/WebDatamaceApi.csproj", "WebDatamaceApi/"]
 RUN dotnet restore "WebDatamaceApi/WebDatamaceApi.csproj"
 COPY . .
 WORKDIR "/src/WebDatamaceApi"
