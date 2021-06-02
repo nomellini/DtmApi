@@ -25,6 +25,6 @@ stages:
         containerRegistry: 'vps24790'
         repository: 'webdatamaceapi'
         command: 'buildAndPush'
-        Dockerfile: '$(Build.SourcesDirectory)/WebDatamaceApi/Dockerfile'
+        Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
