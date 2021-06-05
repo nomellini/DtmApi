@@ -57,24 +57,25 @@ namespace WebDatamaceApi.Controllers
                         NomeEmpresa = _context.TbEmpresas.Where(emp => emp.Empresa == x.IdEmpresa).FirstOrDefault().Nome,
                         Estado = x.Estado,
                         ListaTreinamentos = new List<string>(),
-                        ListaTurmas = (from turma in _context.Set<CurTurma>()
-                                       join grupo in _context.Set<CurTurmaGrupo>()
-                                        on turma.IdGrupo equals grupo.IdGrupo
-                                       join usetTurma in _context.Set<CurUsuariosTurmas>()
-                                       on turma.IdTurma equals usetTurma.IdTurma
-                                       join treinamento in _context.Set<CurTreinamento>()
-                                      on turma.IdTreinamento equals treinamento.IdTreinamento
-                                       where usetTurma.IdUsuario == x.IdUsuario
-                                       orderby grupo.NomeGrupo ascending
-                                       select new CurTurmaUsuarioEntity
-                                       {
-                                           turma = turma,
-                                           grupo = grupo,
-                                           treinamento = treinamento,
+                        ListaTurmas = new List<CurTurmaUsuarioEntity>()
+                        //ListaTurmas = (from turma in _context.Set<CurTurma>()
+                        //               join grupo in _context.Set<CurTurmaGrupo>()
+                        //                on turma.IdGrupo equals grupo.IdGrupo
+                        //               join usetTurma in _context.Set<CurUsuariosTurmas>()
+                        //               on turma.IdTurma equals usetTurma.IdTurma
+                        //               join treinamento in _context.Set<CurTreinamento>()
+                        //              on turma.IdTreinamento equals treinamento.IdTreinamento
+                        //               where usetTurma.IdUsuario == x.IdUsuario
+                        //               orderby grupo.NomeGrupo ascending
+                        //               select new CurTurmaUsuarioEntity
+                        //               {
+                        //                   turma = turma,
+                        //                   grupo = grupo,
+                        //                   treinamento = treinamento,
 
-                                           inscritos =
-                                       _context.Set<CurUsuariosTurmas>().Where(x => x.IdTurma == turma.IdTurma).Count()
-                                       }).ToList()
+                        //                   inscritos =
+                        //               _context.Set<CurUsuariosTurmas>().Where(x => x.IdTurma == turma.IdTurma).Count()
+                        //               }).ToList()
                         //ListaTreinamentos = _context.CurTreinamento.Where(CurTrein =>
                         //   _context.CurTurma.Where(curturm =>
                         //   _context.CurUsuariosTurmas.Where(curusu => curusu.IdUsuario == x.IdUsuario)
