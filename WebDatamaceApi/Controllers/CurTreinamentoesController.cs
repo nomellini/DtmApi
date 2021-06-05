@@ -65,7 +65,8 @@ namespace WebDatamaceApi.Controllers
 
                 ids.Contains(x.IdTreinamento)
                 && x.Publicado
-                && (((DateTime)x.DataFinal).Date >= StartDate.Date && ((DateTime)x.DataFinal).Date <= EndDate.Date)
+                && ((DateTime)x.DataInicio).Date <= EndDate.Date 
+                && ((DateTime)x.DataFinal).Date >= StartDate.Date
 
                 ).ToListAsync().Result;
 
@@ -75,8 +76,8 @@ namespace WebDatamaceApi.Controllers
             while (StartDate.AddDays(DayInterval) <= EndDate)
             {
                 List<CurTurma> curTurmasAux = curTurmas.Where(x =>
-                    ((DateTime)x.DataInicio).Date <= StartDate.Date &&
-                    ((DateTime)x.DataFinal).Date >= StartDate.Date).ToList();
+                    Between(StartDate, ((DateTime)x.DataInicio).Date, ((DateTime)x.DataFinal).Date)
+                  ).ToList();
 
                 if (curTurmasAux.Count() > 0)
                 {
@@ -94,7 +95,7 @@ namespace WebDatamaceApi.Controllers
 
                     dateList.Add(new CalendarioTreinamentoEntity()
                     {
-                        DateFormat = StartDate.Date.ToString("D", CultureInfo.CreateSpecificCulture("pt-BR")),
+                        DateFormat = UppercaseFirst(StartDate.Date.ToString("D", CultureInfo.CreateSpecificCulture("pt-BR"))),
                         DataCalendario = StartDate,
                         calendarioTreinamentoEntityChildren = calendarioTreinamentoEntityChildren
 
@@ -109,6 +110,21 @@ namespace WebDatamaceApi.Controllers
 
         }
 
+        private string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
+
+        private bool Between(DateTime input, DateTime date1, DateTime date2)
+        {
+            return (input >= date1 && input <= date2);
+        }
 
 
 
