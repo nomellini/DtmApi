@@ -139,7 +139,22 @@ namespace WebDatamaceApi.Controllers
             {
                 CurTreinamentos = curTreinamentos.OrderBy(x => x.Nome).ToList(),
                 CurTreinamentoCategorias = _context.CurTreinamentoCategoria.OrderBy(x => x.NomeCategoria).ToListAsync().Result,
-            };
+                CurTurmas = (from turma in _context.Set<CurTurma>()
+                                join grupo in _context.Set<CurTurmaGrupo>()
+                                 on turma.IdGrupo equals grupo.IdGrupo
+                                where turma.IdTreinamento == id && turma.Publicado && turma.Aberta
+                                orderby  grupo.NomeGrupo
+                             select new TurmaGrupoChildEntity { CurTurma =  turma,  CurTurmaGrupo = grupo }).ToList()
+                             .GroupBy(j=> j.CurTurmaGrupo.NomeGrupo).Select(p=> new TurmaGrupoEntity
+                             {
+                                 CurTurmaGrupo = p.Key,
+                                 CurTurmas = p.ToList().OrderBy(x=> x.CurTurma.Modulo).ToList(),
+                                 Periodo = p.ToList().Count()
+                             }).ToList()
+
+
+
+        };
 
 
             return curTreinamentonotAdm;

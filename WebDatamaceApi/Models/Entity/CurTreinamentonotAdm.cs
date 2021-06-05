@@ -9,6 +9,7 @@ namespace WebDatamaceApi.Models.Entity
     {
 
         public List<CurTreinamento> CurTreinamentos { get; set; }
+        public List<TurmaGrupoEntity> CurTurmas { get; set; }
         public List<CurTreinamentoCategoria> CurTreinamentoCategorias { get; set; }
     }
 }

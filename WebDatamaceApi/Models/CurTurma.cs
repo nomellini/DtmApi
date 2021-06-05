@@ -101,6 +101,40 @@ namespace WebDatamaceApi.Models
 
 
 
+        [NotMapped]
+        [Column("HoraInicioFormat")]
+        public string HoraInicioFormat
+        {
+            get
+            {
+                if (this.DataInicio != null)
+                    return ((DateTime)this.DataInicio).Hour.ToString("D2") + "h"+ ((DateTime)this.DataInicio).Minute.ToString("D2");
+                else
+                    return "";
+
+            }
+            set { }
+        }
+
+
+
+        [NotMapped]
+        [Column("HoraFinalFormat")]
+        public string HoraFinalFormat
+        {
+            get
+            {
+                if (this.DataInicio != null)
+                    return ((DateTime)this.DataFinal).Hour.ToString("D2") + "h" + ((DateTime)this.DataFinal).Minute.ToString("D2");
+                else
+                    return "";
+
+            }
+            set { }
+        }
+
+
+
 
     }
 }
