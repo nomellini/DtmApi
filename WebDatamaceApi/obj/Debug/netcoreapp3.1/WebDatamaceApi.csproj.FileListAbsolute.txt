@@ -194,4 +194,4 @@ D:\Projetos\Pessoal\Datamace\WebDatamaceApi\WebDatamaceApi\bin\Debug\netcoreapp3
 D:\Projetos\Pessoal\Datamace\WebDatamaceApi\WebDatamaceApi\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
 D:\Projetos\Pessoal\Datamace\WebDatamaceApi\WebDatamaceApi\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 D:\Projetos\Pessoal\Datamace\WebDatamaceApi\WebDatamaceApi\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
-D:\Projetos\Pessoal\Datamace\WebDatamaceApi\WebDatamaceApi\obj\Debug\netcoreapp3.1\WebDatamaceApi.csprojAssemblyReference.cache
+D:\Projetos\Pessoal\Datamace\WebDatamaceApi\WebDatamaceApi\obj\Debug\netcoreapp3.1\WebDatamaceApi.csproj.AssemblyReference.cache

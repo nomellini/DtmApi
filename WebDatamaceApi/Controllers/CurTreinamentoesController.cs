@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -65,7 +66,7 @@ namespace WebDatamaceApi.Controllers
 
                 ids.Contains(x.IdTreinamento)
                 && x.Publicado
-                && ((DateTime)x.DataInicio).Date <= EndDate.Date 
+                && ((DateTime)x.DataInicio).Date <= EndDate.Date
                 && ((DateTime)x.DataFinal).Date >= StartDate.Date
 
                 ).ToListAsync().Result;
@@ -140,21 +141,21 @@ namespace WebDatamaceApi.Controllers
                 CurTreinamentos = curTreinamentos.OrderBy(x => x.Nome).ToList(),
                 CurTreinamentoCategorias = _context.CurTreinamentoCategoria.OrderBy(x => x.NomeCategoria).ToListAsync().Result,
                 CurTurmas = (from turma in _context.Set<CurTurma>()
-                                join grupo in _context.Set<CurTurmaGrupo>()
-                                 on turma.IdGrupo equals grupo.IdGrupo
-                                where turma.IdTreinamento == id && turma.Publicado && turma.Aberta
-                                orderby  grupo.NomeGrupo
-                             select new TurmaGrupoChildEntity { CurTurma =  turma,  CurTurmaGrupo = grupo }).ToList()
-                             .GroupBy(j=> j.CurTurmaGrupo.NomeGrupo).Select(p=> new TurmaGrupoEntity
+                             join grupo in _context.Set<CurTurmaGrupo>()
+                              on turma.IdGrupo equals grupo.IdGrupo
+                             where turma.IdTreinamento == id && turma.Publicado && turma.Aberta
+                             orderby grupo.NomeGrupo
+                             select new TurmaGrupoChildEntity { CurTurma = turma, CurTurmaGrupo = grupo }).ToList()
+                             .GroupBy(j => j.CurTurmaGrupo.NomeGrupo).Select(p => new TurmaGrupoEntity
                              {
                                  CurTurmaGrupo = p.Key,
-                                 CurTurmas = p.ToList().OrderBy(x=> x.CurTurma.Modulo).ToList(),
+                                 CurTurmas = p.ToList().OrderBy(x => x.CurTurma.Modulo).ToList(),
                                  Periodo = p.ToList().Count()
                              }).ToList()
 
 
 
-        };
+            };
 
 
             return curTreinamentonotAdm;
@@ -210,10 +211,136 @@ namespace WebDatamaceApi.Controllers
             }
 
             return NoContent();
-
-
         }
 
+
+        [HttpPost("Inscrever/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Inscrever(int id, Inscrever inscreverEntity)
+        {
+
+            var curTreinamento = await _context.CurTreinamento.FindAsync(id);
+
+            if (curTreinamento == null)
+            {
+                return NotFound();
+            }
+
+            if (string.IsNullOrEmpty(inscreverEntity.cpf))
+            {
+                return BadRequest();
+            }
+
+            var userExit = _context.CurUsuarios.Where(x => x.Cpf.Equals(inscreverEntity.cpf)).FirstOrDefault();
+            if (userExit == null)
+            {
+
+                string numero = "";
+                string ddd = "";
+                if (Regex.Match(inscreverEntity.telefone, @"\((\d{2})\)\s?(\d{4,5}\-?\d{4})").Success)
+                {
+                    // Remove qualquer caracter que não seja numérico
+                    numero = CleanPhone(inscreverEntity.telefone);
+                    // Pega os 2 primeiros caracteres
+                    ddd = numero.Substring(0, 2);
+                    numero = numero.Substring(2, numero.Length - 2);
+                }
+
+                var empresa = _context.TbEmpresas.Where(x => x.Codigo.Equals(inscreverEntity.codigo)).FirstOrDefault();
+                CurUsuarios curUsuarios = new CurUsuarios()
+                {
+                    Cpf = inscreverEntity.cpf,
+                    DataCriacao = DateTime.Now,
+                    Email = inscreverEntity.email,
+                    DesejaNews = false,
+                    Nome = inscreverEntity.nome,
+                    IdEmpresa = empresa == null ? 0 : empresa.Empresa,
+                    Estado = inscreverEntity.estado,
+                    Cidade = inscreverEntity.cidade,
+                    Funcao = inscreverEntity.cargo,
+                    Ddd = ddd,
+                    Telefone = numero
+                };
+
+                try
+                {
+                    _context.CurUsuarios.Add(curUsuarios);
+
+                    await _context.SaveChangesAsync();
+
+                    userExit = curUsuarios;
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
+
+            }
+
+            if (userExit == null && userExit.IdUsuario == 0 && inscreverEntity.modulos == null && inscreverEntity.modulos.Count() == 0)
+            {
+                return BadRequest();
+            }
+
+
+
+            foreach (var modulo in inscreverEntity.modulos)
+            {
+                var turma = _context.CurTurma.Where(x => x.IdTreinamento == id && x.IdTurma == modulo).FirstOrDefault();
+                if (turma != null)
+                {
+                    CurUsuariosTurmas curUsuariosTurmas = new CurUsuariosTurmas()
+                    {
+                        IdTurma = turma.IdTurma,
+                        IdUsuario = userExit.IdUsuario,
+                        Aprovado = false,
+                        DataCriacao = DateTime.Now,
+                        Pago = false,
+                        Presente = false,
+                        Resultado = "",
+                        Obs = inscreverEntity.aceitepagamento ? "Aceito as condições de pagamento." : "Não aceito as condições de pagamento."
+                    };
+
+                    var usuariocadastrado = _context.CurUsuariosTurmas.Where(x => x.IdTurma == turma.IdTurma && x.IdUsuario == userExit.IdUsuario).FirstOrDefault();
+                    if (usuariocadastrado == null)
+                    {
+                        try
+                        {
+                            _context.CurUsuariosTurmas.Add(curUsuariosTurmas);
+
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            throw;
+
+                        }
+                        catch (Exception e)
+                        {
+                            throw;
+                        }
+                    }
+                }
+            }
+
+
+
+
+            return NoContent();
+        }
+
+        private static Regex digitsOnly = new Regex(@"[^\d]");
+
+
+        public static string CleanPhone(string phone)
+        {
+            return digitsOnly.Replace(phone, "");
+        }
 
         // GET: api/CurTreinamentoes
         [HttpGet]
