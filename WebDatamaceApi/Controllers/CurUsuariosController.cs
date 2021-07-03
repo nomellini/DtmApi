@@ -144,6 +144,43 @@ namespace WebDatamaceApi.Controllers
             }
         }
 
+        [HttpGet("GetTurmas")]
+        public async Task<ActionResult<IEnumerable<CurTurmaUsuarioEntity>>> GetTurmas(int idUsuario = 0)
+        {
+
+            if (idUsuario == 0)
+            {
+                return new List<CurTurmaUsuarioEntity>();
+            }
+            try
+            {
+                return await (from turma in _context.Set<CurTurma>()
+                        join grupo in _context.Set<CurTurmaGrupo>()
+                         on turma.IdGrupo equals grupo.IdGrupo
+                        join usetTurma in _context.Set<CurUsuariosTurmas>()
+                        on turma.IdTurma equals usetTurma.IdTurma
+                        join treinamento in _context.Set<CurTreinamento>()
+                       on turma.IdTreinamento equals treinamento.IdTreinamento
+                        where usetTurma.IdUsuario == idUsuario
+                        orderby grupo.NomeGrupo ascending
+                        select new CurTurmaUsuarioEntity
+                        {
+                            turma = turma,
+                            grupo = grupo,
+                            treinamento = treinamento,
+
+                            inscritos =
+                    _context.Set<CurUsuariosTurmas>().Where(x => x.IdTurma == turma.IdTurma).Count()
+                        }).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+                return new List<CurTurmaUsuarioEntity>();
+            }
+        }
+
+
 
 
         // GET: api/CurUsuarios
@@ -225,7 +262,8 @@ namespace WebDatamaceApi.Controllers
 
                 List<int> ids = _context.CurTurma.Where(x => x.IdTreinamento == idTreinamento).Select(u => u.IdTurma).ToList();
 
-                if (ids == null) {
+                if (ids == null)
+                {
                     return new List<CurUsuarios>();
                 }
 
@@ -515,7 +553,7 @@ namespace WebDatamaceApi.Controllers
                 if (add)
                 {
 
-                    
+
                     if (curUsuariosTurmas == null)
                     {
                         curUsuariosTurmas = new CurUsuariosTurmas()
@@ -533,8 +571,9 @@ namespace WebDatamaceApi.Controllers
                         await _context.SaveChangesAsync();
                     }
                 }
-                else {
-                   
+                else
+                {
+
                     if (curUsuariosTurmas == null)
                     {
                         return NotFound();
