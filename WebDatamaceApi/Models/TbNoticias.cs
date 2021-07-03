@@ -15,7 +15,7 @@ namespace WebDatamaceApi.Models
         public string NotResenha { get; set; }
         [Column(TypeName = "ntext")]
         public string NotConteudo { get; set; }
-        [StringLength(60)]
+        [StringLength(250)]
         public string NotFonte { get; set; }
         [StringLength(50)]
         public string NotImagem { get; set; }
