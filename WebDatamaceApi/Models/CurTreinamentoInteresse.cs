@@ -45,5 +45,18 @@ namespace WebDatamaceApi.Models
             }
             set { }
         }
+
+
+        [NotMapped]
+        [Column("DataCriacaoFormat")]
+        public string DataCriacaoFormat
+        {
+            get
+            {
+                return this.DataCriacao.ToString("dd/MM/yyyy");
+
+            }
+            set { }
+        }
     }
 }
