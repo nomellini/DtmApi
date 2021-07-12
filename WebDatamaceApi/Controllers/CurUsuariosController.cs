@@ -462,7 +462,7 @@ namespace WebDatamaceApi.Controllers
             if (Regex.Match(curUsuarioEntity.Celular, @"\((\d{2})\)\s?(\d{4,5}\-?\d{4})").Success)
             {
                 // Remove qualquer caracter que não seja numérico
-                celular = CleanPhone(curUsuarioEntity.Telefone);
+                celular = CleanPhone(curUsuarioEntity.Celular);
                 // Pega os 2 primeiros caracteres
                 ddd1 = celular.Substring(0, 2);
                 celular = celular.Substring(2, celular.Length - 2);
