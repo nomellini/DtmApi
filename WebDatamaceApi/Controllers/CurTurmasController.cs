@@ -91,7 +91,7 @@ namespace WebDatamaceApi.Controllers
             {
                 List<int> curUsuariosTurmas = _context.CurUsuariosTurmas
                     .Where(x => x.IdUsuario == idUser)
-                    .Select(r=> r.IdTurma).ToList();
+                    .Select(r => r.IdTurma).ToList();
 
 
                 var query = from turma in _context.Set<CurTurma>()
@@ -99,7 +99,7 @@ namespace WebDatamaceApi.Controllers
                              on turma.IdGrupo equals grupo.IdGrupo
                             join treinamento in _context.Set<CurTreinamento>()
                             on turma.IdTreinamento equals treinamento.IdTreinamento
-                           
+
                             where turma.Aberta == true && !curUsuariosTurmas.Contains(turma.IdTurma)
                             orderby turma.DataInicio descending
                             select new CurTurmaUsuarioEntity
@@ -144,8 +144,43 @@ namespace WebDatamaceApi.Controllers
             }
 
 
+            try
+            {
 
-            _context.Entry(curTurma).State = EntityState.Modified;
+                //var curTurmaUpdate = await _context.CurTurma.FindAsync(id);
+                //if (curTurmaUpdate == null)
+                //{
+                //    return NotFound();
+                //}
+
+                var curtuma = await _context.CurTurmaGrupo.FindAsync(curTurma.IdGrupo);
+
+                if (curtuma == null || !curtuma.NomeGrupo.Equals(((DateTime)curTurma.DataInicio).ToString("MM/yyyy")))
+                {
+                    CurTurmaGrupo curTurmaGrupo = new CurTurmaGrupo()
+                    {
+                        IdGrupo = 0,
+                        NomeGrupo = ((DateTime)curTurma.DataInicio).ToString("MM/yyyy")
+                    };
+
+                    _context.CurTurmaGrupo.Add(curTurmaGrupo);
+
+                    await _context.SaveChangesAsync();
+
+                    if (curTurmaGrupo.IdGrupo > 0)
+                    {
+                        curTurma.IdGrupo = curTurmaGrupo.IdGrupo;
+                    }
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            _context.Entry(await _context.CurTurma.FirstOrDefaultAsync(x => x.IdTurma == curTurma.IdTurma))
+                .CurrentValues
+                .SetValues(curTurma);
 
             try
             {
