@@ -155,23 +155,23 @@ namespace WebDatamaceApi.Controllers
             try
             {
                 return await (from turma in _context.Set<CurTurma>()
-                        join grupo in _context.Set<CurTurmaGrupo>()
-                         on turma.IdGrupo equals grupo.IdGrupo
-                        join usetTurma in _context.Set<CurUsuariosTurmas>()
-                        on turma.IdTurma equals usetTurma.IdTurma
-                        join treinamento in _context.Set<CurTreinamento>()
-                       on turma.IdTreinamento equals treinamento.IdTreinamento
-                        where usetTurma.IdUsuario == idUsuario
-                        orderby grupo.NomeGrupo ascending
-                        select new CurTurmaUsuarioEntity
-                        {
-                            turma = turma,
-                            grupo = grupo,
-                            treinamento = treinamento,
+                              join grupo in _context.Set<CurTurmaGrupo>()
+                               on turma.IdGrupo equals grupo.IdGrupo
+                              join usetTurma in _context.Set<CurUsuariosTurmas>()
+                              on turma.IdTurma equals usetTurma.IdTurma
+                              join treinamento in _context.Set<CurTreinamento>()
+                             on turma.IdTreinamento equals treinamento.IdTreinamento
+                              where usetTurma.IdUsuario == idUsuario
+                              orderby grupo.NomeGrupo ascending
+                              select new CurTurmaUsuarioEntity
+                              {
+                                  turma = turma,
+                                  grupo = grupo,
+                                  treinamento = treinamento,
 
-                            inscritos =
-                    _context.Set<CurUsuariosTurmas>().Where(x => x.IdTurma == turma.IdTurma).Count()
-                        }).ToListAsync();
+                                  inscritos =
+                          _context.Set<CurUsuariosTurmas>().Where(x => x.IdTurma == turma.IdTurma).Count()
+                              }).ToListAsync();
 
             }
             catch (Exception e)
@@ -185,7 +185,7 @@ namespace WebDatamaceApi.Controllers
 
         // GET: api/CurUsuarios
         [HttpGet("GetByTurma")]
-        public async Task<ActionResult<IEnumerable<CurUsuarios>>> GetByTurma(int idTurma = 0)
+        public async Task<ActionResult<IEnumerable<dynamic>>> GetByTurma(int idTurma = 0)
         {
             if (idTurma == 0)
             {
@@ -194,7 +194,7 @@ namespace WebDatamaceApi.Controllers
             else
             {
                 return await _context.CurUsuarios.Where(x => _context.CurUsuariosTurmas.Where(p => p.IdTurma == idTurma).Select(hj => hj.IdUsuario).Contains(x.IdUsuario))
-                    .Select(x => new CurUsuarios
+                    .Select(x => new
                     {
                         Turmas = _context.CurUsuariosTurmas.Where(e => e.IdUsuario == x.IdUsuario).Count(),
                         IdUsuario = x.IdUsuario,
@@ -216,6 +216,7 @@ namespace WebDatamaceApi.Controllers
                         Telefone = x.Telefone,
                         NomeEmpresa = _context.TbEmpresas.Where(emp => emp.Empresa == x.IdEmpresa).FirstOrDefault().Nome,
                         Estado = x.Estado,
+                        CurUsuariosTurmas = _context.CurUsuariosTurmas.Where(xt => xt.IdTurma == idTurma && xt.IdUsuario == x.IdUsuario).FirstOrDefault(),
                         ListaTreinamentos = new List<string>(),
                         ListaTurmas = (from turma in _context.Set<CurTurma>()
                                        join grupo in _context.Set<CurTurmaGrupo>()
@@ -234,14 +235,6 @@ namespace WebDatamaceApi.Controllers
                                            inscritos =
                                        _context.Set<CurUsuariosTurmas>().Where(x => x.IdTurma == turma.IdTurma).Count()
                                        }).ToList()
-
-
-
-                        //ListaTreinamentos = _context.CurTreinamento.Where(CurTrein =>
-                        //   _context.CurTurma.Where(curturm =>
-                        //   _context.CurUsuariosTurmas.Where(curusu => curusu.IdUsuario == x.IdUsuario)
-                        //   .Select(g => g.IdTurma).Contains(curturm.IdTurma)).Select(fg => fg.IdTreinamento).Contains(CurTrein.IdTreinamento)).Select(cur => cur.Nome)
-                        // .ToList()
                     }
                                 )
                                     .ToListAsync();
@@ -340,7 +333,7 @@ namespace WebDatamaceApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCurUsuarios(int id, CurUsuarioEntity curUsuarioEntity)
+        public async Task<IActionResult> PutCurUsuarios(int id, CurUsuarioEntity curUsuarioEntity, bool presente = false, bool pago = false, bool confirmado = false, string resultado = "", string obs = "", bool isUpdateTurma = false)
         {
             if (curUsuarioEntity == null &&
                 id != curUsuarioEntity.IdUsuario
@@ -360,7 +353,7 @@ namespace WebDatamaceApi.Controllers
 
             string numero = "";
             string ddd = "";
-            if (Regex.Match(curUsuarioEntity.Telefone, @"\((\d{2})\)\s?(\d{4,5}\-?\d{4})").Success)
+            if (!string.IsNullOrEmpty(curUsuarioEntity.Telefone) && Regex.Match(curUsuarioEntity.Telefone, @"\((\d{2})\)\s?(\d{4,5}\-?\d{4})").Success)
             {
                 // Remove qualquer caracter que não seja numérico
                 numero = CleanPhone(curUsuarioEntity.Telefone);
@@ -372,10 +365,10 @@ namespace WebDatamaceApi.Controllers
 
             string celular = "";
             string ddd1 = "";
-            if (Regex.Match(curUsuarioEntity.Celular, @"\((\d{2})\)\s?(\d{4,5}\-?\d{4})").Success)
+            if (!string.IsNullOrEmpty(curUsuarioEntity.Celular) && Regex.Match(curUsuarioEntity.Celular, @"\((\d{2})\)\s?(\d{4,5}\-?\d{4})").Success)
             {
                 // Remove qualquer caracter que não seja numérico
-                celular = CleanPhone(curUsuarioEntity.Telefone);
+                celular = CleanPhone(curUsuarioEntity.Celular);
                 // Pega os 2 primeiros caracteres
                 ddd1 = celular.Substring(0, 2);
                 celular = celular.Substring(2, celular.Length - 2);
@@ -407,6 +400,24 @@ namespace WebDatamaceApi.Controllers
 
 
                 await _context.SaveChangesAsync();
+
+                if (curUsuarioEntity.IdTurma != null && curUsuarioEntity.IdTurma > 0 && isUpdateTurma)
+                {
+                    CurUsuariosTurmas curUsuariosTurmas = _context.CurUsuariosTurmas.Where(x => x.IdTurma == curUsuarioEntity.IdTurma && x.IdUsuario == curUsuarioEntity.IdUsuario).FirstOrDefault();
+                    if (curUsuariosTurmas != null)
+                    {
+                        curUsuariosTurmas.Aprovado = confirmado;
+                        curUsuariosTurmas.Obs = obs;
+                        curUsuariosTurmas.Pago = pago;
+                        curUsuariosTurmas.Presente = presente;
+                        curUsuariosTurmas.Resultado = resultado;
+
+                        _context.Entry(curUsuariosTurmas).State = EntityState.Modified;
+
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -434,7 +445,7 @@ namespace WebDatamaceApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<CurUsuarios>> PostCurUsuarios(CurUsuarioEntity curUsuarioEntity)
+        public async Task<ActionResult<CurUsuarios>> PostCurUsuarios(CurUsuarioEntity curUsuarioEntity, bool presente = false, bool pago = false, bool confirmado = false, string resultado = "", string obs = "")
         {
             if (curUsuarioEntity == null
                 && String.IsNullOrEmpty(curUsuarioEntity.Cpf)
@@ -501,12 +512,12 @@ namespace WebDatamaceApi.Controllers
                     {
                         IdTurma = (int)curUsuarioEntity.IdTurma,
                         IdUsuario = curUsuarios.IdUsuario,
-                        Aprovado = false,
+                        Aprovado = confirmado,
                         DataCriacao = DateTime.Now,
-                        Obs = "",
-                        Pago = false,
-                        Presente = false,
-                        Resultado = ""
+                        Obs = obs,
+                        Pago = pago,
+                        Presente = presente,
+                        Resultado = resultado
                     };
                     _context.CurUsuariosTurmas.Add(curUsuariosTurmas);
                     await _context.SaveChangesAsync();
