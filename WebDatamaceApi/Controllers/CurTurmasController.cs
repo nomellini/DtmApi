@@ -25,6 +25,47 @@ namespace WebDatamaceApi.Controllers
         }
 
 
+
+        // GET: api/CurTurmas
+        [HttpGet("GetTurma")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> GetTurma(int idTurma = 0)
+        {
+            if (idTurma != 0)
+            {
+                var query = from turma in _context.Set<CurTurma>()
+                            join grupo in _context.Set<CurTurmaGrupo>()
+                            on turma.IdGrupo equals grupo.IdGrupo
+                            join treinamento in _context.Set<CurTreinamento>()
+                            on turma.IdTreinamento equals treinamento.IdTreinamento
+                            join instrutor in _context.Set<CurInstrutor>()
+                            on turma.IdInstrutor equals instrutor.IdInstrutor
+                            where turma.IdTurma == idTurma
+                            orderby turma.DataInicio descending
+                            select new
+                            {
+                                turma,
+                                grupo,
+                                treinamento,
+                                instrutor,
+                                inscritos =
+                                (from curusuariosturmas in _context.Set<CurUsuariosTurmas>()
+                                 join curusuarios in _context.Set<CurUsuarios>()
+                                 on curusuariosturmas.IdUsuario equals curusuarios.IdUsuario
+                                 where curusuariosturmas.IdTurma == idTurma
+                                 select new { curusuarios, tbempresas = 
+                                 _context.Set<TbEmpresas>().Where(x => x.Empresa == curusuarios.IdEmpresa).FirstOrDefault() }
+                                ).ToList()
+
+                            };
+
+                return await query.ToListAsync();
+                //_context.Set<CurUsuariosTurmas>().Where(x => x.IdTurma == turma.IdTurma).ToList() };
+                //return await _context.CurTurma.Where(x=> x.IdTreinamento==idTreinamento).ToListAsync();
+            }
+            return null;
+        }
+
+
         // GET: api/CurTurmas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<dynamic>>> GetCurTurma(int idTreinamento = 0)
