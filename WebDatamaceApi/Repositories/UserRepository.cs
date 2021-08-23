@@ -25,6 +25,15 @@ namespace WebDatamaceApi.Repositories
             return _context.AdmUsuario.Where(x => x.Email.ToLower() == CleanInjection(Email) && x.Senha == senhaMd5).FirstOrDefault();
         }
 
+
+        public CurUsuarios GetCurUsuarios(string Email, string password)
+        {
+
+            string senhaMd5 = CreateMD5(CleanInjection(password));
+
+            return _context.CurUsuarios.Where(x => x.Email.ToLower() == CleanInjection(Email) /*&& x.Senha == senhaMd5*/).FirstOrDefault();
+        }
+
         public string CleanInjection(string text)
         {
             text = text.Replace("'", String.Empty);
