@@ -32,6 +32,7 @@ namespace WebDatamaceApi.Models
         public virtual DbSet<CurTurmaFase> CurTurmaFase { get; set; }
         public virtual DbSet<CurTurmaGrupo> CurTurmaGrupo { get; set; }
         public virtual DbSet<CurUsuarios> CurUsuarios { get; set; }
+        public virtual DbSet<CurUsuariosLog> CurUsuariosLog { get; set; }
         public virtual DbSet<CurUsuariosTeste> CurUsuariosTeste { get; set; }
         public virtual DbSet<CurUsuariosTurmas> CurUsuariosTurmas { get; set; }
         public virtual DbSet<Dtproperties> Dtproperties { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -59,6 +60,7 @@ namespace WebDatamaceApi.Controllers
         public ActionResult<dynamic> AuthenticateUsers([FromBody] Users model)
         {
             UserRepository userRepository = new UserRepository(_context);
+            LogRepository logRepository = new LogRepository(_context);
 
             // Recupera o usuário
             var user = userRepository.GetCurUsuarios(model.Email, model.Password);
@@ -69,8 +71,22 @@ namespace WebDatamaceApi.Controllers
             if (!user.Status)
                 return Forbid();
 
+            logRepository.InserLog(user.IdUsuario, "Acessou a conta");
             // Gera o Token
             var token = TokenService.GenerateTokenCurUsuario(user);
+
+            var listCurUsuariosLog = _context.CurUsuariosLog.Where(k => k.CurUsuariosIdUsuario == user.IdUsuario).ToList();
+
+            var logs = listCurUsuariosLog.GroupBy(o => o.DataLog.AddHours(-3).Date).OrderBy(i=> i.Key)
+                              .Select(f => new
+                              {
+                                  DataForma = UppercaseFirst(f.Key.ToString("D", CultureInfo.CreateSpecificCulture("pt-BR"))),
+                                  DataLogs = f.Select(r => new
+                                  {
+                                      Hora = (r.DataLog.AddHours(-3)).Hour.ToString("D2") + ":" + (r.DataLog.AddHours(-3)).Minute.ToString("D2"),
+                                      Texto = r.Log
+                                  })
+                              }).ToList();
 
             var cursos = (from curusuariosturmas in _context.Set<CurUsuariosTurmas>()
                           join curusuarios in _context.Set<CurUsuarios>()
@@ -80,7 +96,12 @@ namespace WebDatamaceApi.Controllers
                           join curtreinamento in _context.Set<CurTreinamento>()
                             on curturmas.IdTreinamento equals curtreinamento.IdTreinamento
                           where curusuariosturmas.IdUsuario == user.IdUsuario
-                          select new { curturmas, curtreinamento }).ToList();
+                          select new
+                          {
+                              curturmas,
+                              curtreinamento,
+                              curusuariosturmas
+                          }).ToList();
 
             // Oculta a senha
             user.Senha = "";
@@ -90,8 +111,20 @@ namespace WebDatamaceApi.Controllers
             {
                 user = user,
                 cursos = cursos,
+                logs = logs,
                 token = token
             };
+        }
+
+        private string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
         }
 
 
