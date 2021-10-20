@@ -99,7 +99,7 @@ namespace WebDatamaceApi.Controllers
         {
 
 
-            var query = from tbTransferenciaArquivos in _context.Set<TbTransferenciaArquivos>() 
+            var query = from tbTransferenciaArquivos in _context.Set<TbTransferenciaArquivos>()
                         join tbempresa in _context.Set<TbEmpresas>()
                         on tbTransferenciaArquivos.idEmpresa equals tbempresa.Empresa into juncao1
                         from tbTransferenciaArquivos1 in juncao1.DefaultIfEmpty()
@@ -110,7 +110,8 @@ namespace WebDatamaceApi.Controllers
                         on tbTransferenciaArquivos.idUsuario equals tbUsuarios.Usuario into juncao3
                         from tbTransferenciaArquivos3 in juncao3.DefaultIfEmpty()
                         where tbTransferenciaArquivos.Remetente == null
-                        select new TbTransferenciaArquivos     {
+                        select new TbTransferenciaArquivos
+                        {
                             Transferencia = tbTransferenciaArquivos.Transferencia,
                             Remetente = tbTransferenciaArquivos.Remetente,
                             Destinatario = tbTransferenciaArquivos.Destinatario,
@@ -127,7 +128,8 @@ namespace WebDatamaceApi.Controllers
                             nomeUsuario = tbTransferenciaArquivos3.Nome,
                             DataEnvioFormat = tbTransferenciaArquivos.Dataenvio.ToString("dd/MM/yyyy"),
                             Dataenvio = tbTransferenciaArquivos.Dataenvio,
-                            Status = tbTransferenciaArquivos.Status } ;
+                            Status = tbTransferenciaArquivos.Status
+                        };
 
             return await query.ToListAsync();
 
@@ -242,10 +244,9 @@ namespace WebDatamaceApi.Controllers
             try
             {
                 tbTransferenciaArquivos.Para = "gabriel.dassie@hotmail.com";
-                tbTransferenciaArquivos.Remetente = null;
+                //tbTransferenciaArquivos.Remetente = null;
                 _context.TbTransferenciaArquivos.Add(tbTransferenciaArquivos);
                 await _context.SaveChangesAsync();
-
 
                 string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
                 string to = "gabriel.dassie@hotmail.com";   // E-mail do destinatário
@@ -253,13 +254,12 @@ namespace WebDatamaceApi.Controllers
                 string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
                 string conteudo = tbTransferenciaArquivos.Comentarios;
 
-
                 MailMessage message = new MailMessage(from, to, tbTransferenciaArquivos.Assunto, conteudo);
                 if (!tbTransferenciaArquivos.Arquivo.Equals(""))
                 {
-                   
-                        message.Attachments.Add(new Attachment(_environment.WebRootPath + "\\suporte\\" + tbTransferenciaArquivos.Arquivo));
-               }
+
+                    message.Attachments.Add(new Attachment(_environment.WebRootPath + "\\suporte\\" + tbTransferenciaArquivos.Arquivo));
+                }
 
                 using (SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port))
                 {
@@ -267,13 +267,15 @@ namespace WebDatamaceApi.Controllers
                     smtp.Send(message);
                 }
             }
-
-            catch (DbUpdateConcurrencyException)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
 
-            return CreatedAtAction("GetTbTransferenciaArquivos", new { id = tbTransferenciaArquivos.Transferencia }, tbTransferenciaArquivos);
+            return CreatedAtAction("GetTbTransferenciaArquivos", new
+            {
+                id = tbTransferenciaArquivos.Transferencia
+            }, tbTransferenciaArquivos);
         }
 
         // DELETE: api/TbTransferenciaArquivos/5

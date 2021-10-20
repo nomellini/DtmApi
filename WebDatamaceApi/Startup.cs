@@ -22,6 +22,7 @@ using WebDatamaceApi.Services;
 using System.Net.Mime;
 using WebDatamaceApi.Models.Entity;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace WebDatamaceApi
 {
@@ -58,7 +59,13 @@ namespace WebDatamaceApi
 
             services.AddControllers().AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                ); 
+                );
+
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
+            });
 
             services.AddSwaggerGen(c =>
             {

@@ -20,7 +20,10 @@ namespace WebDatamaceApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseKestrel(options => {
+                        options.Limits.MaxRequestBodySize = null; // or a given limit
+                    });
                 });
     }
 }
