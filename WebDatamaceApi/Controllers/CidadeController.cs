@@ -47,7 +47,7 @@ namespace WebDatamaceApi.Controllers
         [HttpGet("GetByUF")]
         public async Task<ActionResult<IEnumerable<Cidade>>> GetByUF(string Uf)
         {
-            return await _context.Cidades.Where(x => x.Uf.Equals(Uf.ToUpper())).ToListAsync();
+            return await _context.Cidades.Where(x => x.Uf.Equals(Uf.ToUpper())).OrderBy(x=> x.Nome).ToListAsync();
 
         }
 
