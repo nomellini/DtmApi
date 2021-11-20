@@ -243,13 +243,13 @@ namespace WebDatamaceApi.Controllers
         {
             try
             {
-                tbTransferenciaArquivos.Para = "gabriel.dassie@hotmail.com";
+                //tbTransferenciaArquivos.Para = "gabriel.dassie@hotmail.com";
                 //tbTransferenciaArquivos.Remetente = null;
                 _context.TbTransferenciaArquivos.Add(tbTransferenciaArquivos);
                 await _context.SaveChangesAsync();
 
                 string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                string to = "gabriel.dassie@hotmail.com";   // E-mail do destinatário
+                string to = tbTransferenciaArquivos.Para;   // E-mail do destinatário
                 string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
                 string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
                 string conteudo = tbTransferenciaArquivos.Comentarios;

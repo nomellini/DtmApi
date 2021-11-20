@@ -192,7 +192,7 @@ namespace WebDatamaceApi.Controllers
 
 
                     string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                    string to = "gabriel.dassie@hotmail.com";   // E-mail do destinatário
+                    string to = mailControle.EmailDestinatario;   // E-mail do destinatário
                     string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
                     string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
                     string conteudo = mailControle.Conteudo;
