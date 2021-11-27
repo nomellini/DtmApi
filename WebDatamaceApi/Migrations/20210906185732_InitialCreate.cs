@@ -1833,23 +1833,23 @@ namespace WebDatamaceApi.Migrations
             //        table.PrimaryKey("PK_TbProdutosPastas", x => x.Id);
             //    });
 
-            //migrationBuilder.CreateTable(
-            //    name: "tbsolucao",
-            //    columns: table => new
-            //    {
-            //        Id = table.Column<int>(nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        slug = table.Column<string>(maxLength: 250, nullable: false),
-            //        menu = table.Column<string>(maxLength: 250, nullable: false),
-            //        titulo = table.Column<string>(maxLength: 250, nullable: false),
-            //        imagePath = table.Column<string>(maxLength: 250, nullable: true),
-            //        parent = table.Column<bool>(nullable: false),
-            //        conteudo = table.Column<string>(type: "ntext", nullable: false)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_tbsolucao", x => x.Id);
-            //    });
+            migrationBuilder.CreateTable(
+                name: "tbsolucao",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    slug = table.Column<string>(maxLength: 250, nullable: false),
+                    menu = table.Column<string>(maxLength: 250, nullable: false),
+                    titulo = table.Column<string>(maxLength: 250, nullable: false),
+                    imagePath = table.Column<string>(maxLength: 250, nullable: true),
+                    parent = table.Column<bool>(nullable: false),
+                    conteudo = table.Column<string>(type: "ntext", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbsolucao", x => x.Id);
+                });
 
             //migrationBuilder.CreateTable(
             //    name: "tbUpload",
@@ -2288,314 +2288,314 @@ namespace WebDatamaceApi.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "admAcoes");
+            //migrationBuilder.DropTable(
+            //    name: "admAcoes");
 
-            migrationBuilder.DropTable(
-                name: "admArea");
+            //migrationBuilder.DropTable(
+            //    name: "admArea");
 
-            migrationBuilder.DropTable(
-                name: "admUsuario");
+            //migrationBuilder.DropTable(
+            //    name: "admUsuario");
 
-            migrationBuilder.DropTable(
-                name: "admUsuariosAreas");
+            //migrationBuilder.DropTable(
+            //    name: "admUsuariosAreas");
 
-            migrationBuilder.DropTable(
-                name: "adonis_schema");
+            //migrationBuilder.DropTable(
+            //    name: "adonis_schema");
 
-            migrationBuilder.DropTable(
-                name: "avise");
+            //migrationBuilder.DropTable(
+            //    name: "avise");
 
-            migrationBuilder.DropTable(
-                name: "curEmpresas");
+            //migrationBuilder.DropTable(
+            //    name: "curEmpresas");
 
-            migrationBuilder.DropTable(
-                name: "curInstrutor");
+            //migrationBuilder.DropTable(
+            //    name: "curInstrutor");
 
-            migrationBuilder.DropTable(
-                name: "curLocal");
+            //migrationBuilder.DropTable(
+            //    name: "curLocal");
 
-            migrationBuilder.DropTable(
-                name: "curTreinamento");
+            //migrationBuilder.DropTable(
+            //    name: "curTreinamento");
 
-            migrationBuilder.DropTable(
-                name: "curTreinamentoCategoria");
+            //migrationBuilder.DropTable(
+            //    name: "curTreinamentoCategoria");
 
-            migrationBuilder.DropTable(
-                name: "curTreinamentoInteresse");
+            //migrationBuilder.DropTable(
+            //    name: "curTreinamentoInteresse");
 
-            migrationBuilder.DropTable(
-                name: "curTurma");
+            //migrationBuilder.DropTable(
+            //    name: "curTurma");
 
-            migrationBuilder.DropTable(
-                name: "curTurmaFase");
+            //migrationBuilder.DropTable(
+            //    name: "curTurmaFase");
 
-            migrationBuilder.DropTable(
-                name: "curTurmaGrupo");
+            //migrationBuilder.DropTable(
+            //    name: "curTurmaGrupo");
 
-            migrationBuilder.DropTable(
-                name: "curUsuarios");
+            //migrationBuilder.DropTable(
+            //    name: "curUsuarios");
 
-            migrationBuilder.DropTable(
-                name: "curUsuarios_teste");
+            //migrationBuilder.DropTable(
+            //    name: "curUsuarios_teste");
 
-            migrationBuilder.DropTable(
-                name: "curUsuariosTurmas");
+            //migrationBuilder.DropTable(
+            //    name: "curUsuariosTurmas");
 
-            migrationBuilder.DropTable(
-                name: "dtproperties");
+            //migrationBuilder.DropTable(
+            //    name: "dtproperties");
 
-            migrationBuilder.DropTable(
-                name: "Estado");
+            //migrationBuilder.DropTable(
+            //    name: "Estado");
 
-            migrationBuilder.DropTable(
-                name: "evento");
+            //migrationBuilder.DropTable(
+            //    name: "evento");
 
-            migrationBuilder.DropTable(
-                name: "images");
+            //migrationBuilder.DropTable(
+            //    name: "images");
 
-            migrationBuilder.DropTable(
-                name: "lembrete");
+            //migrationBuilder.DropTable(
+            //    name: "lembrete");
 
-            migrationBuilder.DropTable(
-                name: "mail_controle");
+            //migrationBuilder.DropTable(
+            //    name: "mail_controle");
 
-            migrationBuilder.DropTable(
-                name: "MailCampanhas");
+            //migrationBuilder.DropTable(
+            //    name: "MailCampanhas");
 
-            migrationBuilder.DropTable(
-                name: "MailContas");
+            //migrationBuilder.DropTable(
+            //    name: "MailContas");
 
-            migrationBuilder.DropTable(
-                name: "MailEmails");
+            //migrationBuilder.DropTable(
+            //    name: "MailEmails");
 
-            migrationBuilder.DropTable(
-                name: "MailGrupos");
+            //migrationBuilder.DropTable(
+            //    name: "MailGrupos");
 
-            migrationBuilder.DropTable(
-                name: "MailHistory");
+            //migrationBuilder.DropTable(
+            //    name: "MailHistory");
 
-            migrationBuilder.DropTable(
-                name: "MailView");
+            //migrationBuilder.DropTable(
+            //    name: "MailView");
 
-            migrationBuilder.DropTable(
-                name: "Municipio");
+            //migrationBuilder.DropTable(
+            //    name: "Municipio");
 
-            migrationBuilder.DropTable(
-                name: "Orders");
+            //migrationBuilder.DropTable(
+            //    name: "Orders");
 
-            migrationBuilder.DropTable(
-                name: "Orders_teste");
+            //migrationBuilder.DropTable(
+            //    name: "Orders_teste");
 
-            migrationBuilder.DropTable(
-                name: "Ordersteste");
+            //migrationBuilder.DropTable(
+            //    name: "Ordersteste");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satif_8");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satif_8");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_10");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_10");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_11");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_11");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_12");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_12");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_13");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_13");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_14");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_14");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_2");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_2");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_3");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_3");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_4");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_4");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_5");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_5");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_6");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_6");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_7");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_7");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_8");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_8");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_9");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_9");
 
-            migrationBuilder.DropTable(
-                name: "pesq_satisf_extra");
+            //migrationBuilder.DropTable(
+            //    name: "pesq_satisf_extra");
 
-            migrationBuilder.DropTable(
-                name: "SRA010");
+            //migrationBuilder.DropTable(
+            //    name: "SRA010");
 
-            migrationBuilder.DropTable(
-                name: "TB_ARQUIVOS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_ARQUIVOS");
 
-            migrationBuilder.DropTable(
-                name: "TB_CONHECIMENTOS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_CONHECIMENTOS");
 
-            migrationBuilder.DropTable(
-                name: "TB_EMPRESAS_PRODUTOS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_EMPRESAS_PRODUTOS");
 
-            migrationBuilder.DropTable(
-                name: "TB_EMPRESASNova");
+            //migrationBuilder.DropTable(
+            //    name: "TB_EMPRESASNova");
 
-            migrationBuilder.DropTable(
-                name: "tb_enquete");
+            //migrationBuilder.DropTable(
+            //    name: "tb_enquete");
 
-            migrationBuilder.DropTable(
-                name: "TB_TRANSFERENCIA_ARQUIVOS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_TRANSFERENCIA_ARQUIVOS");
 
-            migrationBuilder.DropTable(
-                name: "TB_USUARIOS_LOG");
+            //migrationBuilder.DropTable(
+            //    name: "TB_USUARIOS_LOG");
 
-            migrationBuilder.DropTable(
-                name: "TB_USUARIOS_PRODUTOS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_USUARIOS_PRODUTOS");
 
-            migrationBuilder.DropTable(
-                name: "TbArquivos");
+            //migrationBuilder.DropTable(
+            //    name: "TbArquivos");
 
-            migrationBuilder.DropTable(
-                name: "tbCasosSucesso");
+            //migrationBuilder.DropTable(
+            //    name: "tbCasosSucesso");
 
-            migrationBuilder.DropTable(
-                name: "TbCategoria");
+            //migrationBuilder.DropTable(
+            //    name: "TbCategoria");
 
-            migrationBuilder.DropTable(
-                name: "tbContatos");
+            //migrationBuilder.DropTable(
+            //    name: "tbContatos");
 
-            migrationBuilder.DropTable(
-                name: "tbEmpresa_Produtos");
+            //migrationBuilder.DropTable(
+            //    name: "tbEmpresa_Produtos");
 
-            migrationBuilder.DropTable(
-                name: "tbEmpresa_Usuarios");
+            //migrationBuilder.DropTable(
+            //    name: "tbEmpresa_Usuarios");
 
-            migrationBuilder.DropTable(
-                name: "TbEmpresa_Usuarios_Pastas");
+            //migrationBuilder.DropTable(
+            //    name: "TbEmpresa_Usuarios_Pastas");
 
-            migrationBuilder.DropTable(
-                name: "tbEmpresa_Usuarios_Produtos");
+            //migrationBuilder.DropTable(
+            //    name: "tbEmpresa_Usuarios_Produtos");
 
-            migrationBuilder.DropTable(
-                name: "tbEmpresas");
+            //migrationBuilder.DropTable(
+            //    name: "tbEmpresas");
 
-            migrationBuilder.DropTable(
-                name: "tbEmpresasPastas");
+            //migrationBuilder.DropTable(
+            //    name: "tbEmpresasPastas");
 
-            migrationBuilder.DropTable(
-                name: "tbEmpresasPastasArquivos");
+            //migrationBuilder.DropTable(
+            //    name: "tbEmpresasPastasArquivos");
 
-            migrationBuilder.DropTable(
-                name: "tbEnqueteVotado");
+            //migrationBuilder.DropTable(
+            //    name: "tbEnqueteVotado");
 
-            migrationBuilder.DropTable(
-                name: "tbFaqInfo");
+            //migrationBuilder.DropTable(
+            //    name: "tbFaqInfo");
 
-            migrationBuilder.DropTable(
-                name: "tbFaqTipo");
+            //migrationBuilder.DropTable(
+            //    name: "tbFaqTipo");
 
-            migrationBuilder.DropTable(
-                name: "tbGerCliSub");
+            //migrationBuilder.DropTable(
+            //    name: "tbGerCliSub");
 
-            migrationBuilder.DropTable(
-                name: "tbGerenciador");
+            //migrationBuilder.DropTable(
+            //    name: "tbGerenciador");
 
-            migrationBuilder.DropTable(
-                name: "tbGerenciadorCli");
+            //migrationBuilder.DropTable(
+            //    name: "tbGerenciadorCli");
 
-            migrationBuilder.DropTable(
-                name: "tbGerenciadorUsu");
+            //migrationBuilder.DropTable(
+            //    name: "tbGerenciadorUsu");
 
-            migrationBuilder.DropTable(
-                name: "TbNoticias");
+            //migrationBuilder.DropTable(
+            //    name: "TbNoticias");
 
-            migrationBuilder.DropTable(
-                name: "TbNoticiasCategorias");
+            //migrationBuilder.DropTable(
+            //    name: "TbNoticiasCategorias");
 
-            migrationBuilder.DropTable(
-                name: "tbPesquicaC");
+            //migrationBuilder.DropTable(
+            //    name: "tbPesquicaC");
 
-            migrationBuilder.DropTable(
-                name: "tbPesquisaComent");
+            //migrationBuilder.DropTable(
+            //    name: "tbPesquisaComent");
 
-            migrationBuilder.DropTable(
-                name: "tbPesquisaP");
+            //migrationBuilder.DropTable(
+            //    name: "tbPesquisaP");
 
-            migrationBuilder.DropTable(
-                name: "tbPesquisaQ");
+            //migrationBuilder.DropTable(
+            //    name: "tbPesquisaQ");
 
-            migrationBuilder.DropTable(
-                name: "tbPesquisaTipo");
+            //migrationBuilder.DropTable(
+            //    name: "tbPesquisaTipo");
 
-            migrationBuilder.DropTable(
-                name: "tbPesquisaTitulo");
+            //migrationBuilder.DropTable(
+            //    name: "tbPesquisaTitulo");
 
-            migrationBuilder.DropTable(
-                name: "tbProdutos");
+            //migrationBuilder.DropTable(
+            //    name: "tbProdutos");
 
-            migrationBuilder.DropTable(
-                name: "tbProdutosCategorias");
+            //migrationBuilder.DropTable(
+            //    name: "tbProdutosCategorias");
 
-            migrationBuilder.DropTable(
-                name: "tbProdutosCategoriasArquivos");
+            //migrationBuilder.DropTable(
+            //    name: "tbProdutosCategoriasArquivos");
 
-            migrationBuilder.DropTable(
-                name: "TbProdutosPastas");
+            //migrationBuilder.DropTable(
+            //    name: "TbProdutosPastas");
 
-            migrationBuilder.DropTable(
-                name: "tbsolucao");
+            //migrationBuilder.DropTable(
+            //    name: "tbsolucao");
 
-            migrationBuilder.DropTable(
-                name: "tbUpload");
+            //migrationBuilder.DropTable(
+            //    name: "tbUpload");
 
-            migrationBuilder.DropTable(
-                name: "tbUsuarios");
+            //migrationBuilder.DropTable(
+            //    name: "tbUsuarios");
 
-            migrationBuilder.DropTable(
-                name: "tokens");
+            //migrationBuilder.DropTable(
+            //    name: "tokens");
 
-            migrationBuilder.DropTable(
-                name: "UserDefault");
+            //migrationBuilder.DropTable(
+            //    name: "UserDefault");
 
-            migrationBuilder.DropTable(
-                name: "Usuarios");
+            //migrationBuilder.DropTable(
+            //    name: "Usuarios");
 
-            migrationBuilder.DropTable(
-                name: "VwArquivos");
+            //migrationBuilder.DropTable(
+            //    name: "VwArquivos");
 
-            migrationBuilder.DropTable(
-                name: "VwProdutos");
+            //migrationBuilder.DropTable(
+            //    name: "VwProdutos");
 
-            migrationBuilder.DropTable(
-                name: "properties");
+            //migrationBuilder.DropTable(
+            //    name: "properties");
 
-            migrationBuilder.DropTable(
-                name: "TB_CATEGORIAS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_CATEGORIAS");
 
-            migrationBuilder.DropTable(
-                name: "TB_USUARIOS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_USUARIOS");
 
-            migrationBuilder.DropTable(
-                name: "TB_PRODUTOS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_PRODUTOS");
 
-            migrationBuilder.DropTable(
-                name: "users");
+            //migrationBuilder.DropTable(
+            //    name: "users");
 
-            migrationBuilder.DropTable(
-                name: "TB_EMPRESAS");
+            //migrationBuilder.DropTable(
+            //    name: "TB_EMPRESAS");
         }
     }
 }
