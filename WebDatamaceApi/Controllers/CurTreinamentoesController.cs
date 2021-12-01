@@ -57,8 +57,8 @@ namespace WebDatamaceApi.Controllers
             List<CurTreinamento> curTreinamentos = _context.CurTreinamento.Where(x => x.Publicado).ToListAsync().Result;
             List<int> ids = curTreinamentos.Select(x => x.IdTreinamento).ToList();
 
-            DateTime StartDate = DateTime.Now;
-            DateTime EndDate = StartDate.AddDays(30);
+            DateTime StartDate = DateTime.Now.AddDays(-60);
+            DateTime EndDate = StartDate.AddYears(1);
             int DayInterval = 1;
 
 

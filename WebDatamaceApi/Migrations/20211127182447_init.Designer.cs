@@ -10,8 +10,8 @@ using WebDatamaceApi.Models;
 namespace WebDatamaceApi.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20210906190943_CurUsuariosLogMigra2")]
-    partial class CurUsuariosLogMigra2
+    [Migration("20211127182447_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

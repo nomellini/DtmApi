@@ -8,6 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210906185732_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210906190300_CurUsuariosLogMigration.cs" />
+    <Compile Remove="Migrations\20210906190300_CurUsuariosLogMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210906190428_CurUsuariosLogMigra.cs" />
+    <Compile Remove="Migrations\20210906190428_CurUsuariosLogMigra.Designer.cs" />
+    <Compile Remove="Migrations\20210906190943_CurUsuariosLogMigra2.cs" />
+    <Compile Remove="Migrations\20210906190943_CurUsuariosLogMigra2.Designer.cs" />
+    <Compile Remove="Migrations\20211127174158_tbsolucao.cs" />
+    <Compile Remove="Migrations\20211127174158_tbsolucao.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
