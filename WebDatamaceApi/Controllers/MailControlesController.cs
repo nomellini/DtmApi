@@ -109,7 +109,7 @@ namespace WebDatamaceApi.Controllers
 
             try
             {
-                EnviarEmail(mailControle);
+                await EnviarEmail(mailControle);
 
                 await _context.SaveChangesAsync();
             }
@@ -137,7 +137,7 @@ namespace WebDatamaceApi.Controllers
             _context.MailControle.Add(mailControle);
             try
             {
-                EnviarEmail(mailControle);
+                await EnviarEmail(mailControle);
 
                 await _context.SaveChangesAsync();
             }
@@ -156,7 +156,7 @@ namespace WebDatamaceApi.Controllers
             return CreatedAtAction("GetMailControle", new { id = mailControle.IdControle }, mailControle);
         }
 
-        private void EnviarEmail(MailControle mailControle)
+        private async Task EnviarEmail(MailControle mailControle)
         {
             string emails = "";
             if (mailControle.Enviado == "1")
@@ -188,44 +188,52 @@ namespace WebDatamaceApi.Controllers
 
                 if (!emails.Equals(""))
                 {
-                    mailControle.EmailDestinatario = emails;
+                    //emails = "gabriel.dassie@hotmail.com;domgabriel20@gmail.com";
+                    List<Task> tasks = new List<Task>();
 
-
-                    string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                    string to = mailControle.EmailDestinatario;   // E-mail do destinatário
-                    string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
-                    string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
-                    string conteudo = mailControle.Conteudo;
-                    if (!mailControle.Template.Equals("sem_template.bmp")) {
-
-                        using (var sr = new StreamReader("templates/"+mailControle.Template.Replace(".bmp",".html")))
+                    foreach (var email in emails.Split(";"))
+                    {
+                        mailControle.EmailDestinatario = email;
+                        string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
+                        string to = mailControle.EmailDestinatario;   // E-mail do destinatário
+                        string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
+                        string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
+                        string conteudo = mailControle.Conteudo;
+                        if (!mailControle.Template.Equals("sem_template.bmp"))
                         {
-                            // Read the stream as a string, and write the string to the console.
-                            string templateHtml = sr.ReadToEnd();
-                            if (!String.IsNullOrEmpty(templateHtml))
-                            {
 
-                                conteudo = templateHtml.Replace("{texto_noticia}", conteudo);
+                            using (var sr = new StreamReader("templates/" + mailControle.Template.Replace(".bmp", ".html")))
+                            {
+                                // Read the stream as a string, and write the string to the console.
+                                string templateHtml = sr.ReadToEnd();
+                                if (!String.IsNullOrEmpty(templateHtml))
+                                {
+
+                                    conteudo = templateHtml.Replace("{texto_noticia}", conteudo);
+                                }
                             }
                         }
+
+
+
+                        MailMessage message = new MailMessage(from, to, mailControle.Tema, conteudo);
+                        message.IsBodyHtml = true;
+                        SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port);
+
+                        //using (SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port))
+                        //{
+                            smtp.Credentials = new NetworkCredential(user, pass);
+                            tasks.Add(smtp.SendMailAsync(message));
+                        //}
                     }
 
-
-
-                    MailMessage message = new MailMessage(from, to, mailControle.Tema, conteudo);
-                    message.IsBodyHtml = true;
-                    using (SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port))
-                    {
-                        smtp.Credentials = new NetworkCredential(user, pass);
-                        smtp.Send(message);
-                    }
-
+                    await Task.WhenAll(tasks);
 
                 }
             }
         }
 
- 
+
 
         // DELETE: api/MailControles/5
         [HttpDelete("{id}")]
