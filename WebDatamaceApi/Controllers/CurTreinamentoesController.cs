@@ -214,6 +214,25 @@ namespace WebDatamaceApi.Controllers
         }
 
 
+        [HttpGet("UserExists")]
+        [AllowAnonymous]
+
+        public async Task<IActionResult> UserExists(string cpf)
+        {
+            if (string.IsNullOrEmpty(cpf))
+            {
+                return BadRequest();
+            }
+            var userExit = await _context.CurUsuarios.Where(x => x.Cpf.Equals(cpf)).FirstOrDefaultAsync();
+            if (userExit != null)
+            {
+                return Ok();
+            }
+            return NotFound();
+
+        }
+
+
         [HttpPost("Inscrever/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> Inscrever(int id, Inscrever inscreverEntity)
