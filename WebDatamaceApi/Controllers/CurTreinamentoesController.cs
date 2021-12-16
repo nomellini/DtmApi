@@ -66,8 +66,8 @@ namespace WebDatamaceApi.Controllers
 
                 ids.Contains(x.IdTreinamento)
                 && x.Publicado
-                && ((DateTime)x.DataInicio).Date <= EndDate.Date
-                && ((DateTime)x.DataFinal).Date >= StartDate.Date
+                //&& ((DateTime)x.DataInicio).Date <= EndDate.Date
+                //&& ((DateTime)x.DataFinal).Date >= StartDate.Date
 
                 ).ToListAsync().Result;
 
@@ -77,7 +77,7 @@ namespace WebDatamaceApi.Controllers
             while (StartDate.AddDays(DayInterval) <= EndDate)
             {
                 List<CurTurma> curTurmasAux = curTurmas.Where(x =>
-                    Between(StartDate, ((DateTime)x.DataInicio).Date, ((DateTime)x.DataFinal).Date)
+                    Between(StartDate.Date, ((DateTime)x.DataInicio).Date, ((DateTime)x.DataFinal).Date)
                   ).ToList();
 
                 if (curTurmasAux.Count() > 0)
