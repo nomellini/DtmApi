@@ -156,6 +156,114 @@ namespace WebDatamaceApi.Controllers
             return CreatedAtAction("GetMailControle", new { id = mailControle.IdControle }, mailControle);
         }
 
+
+        // POST: api/MailControles
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost("FaleConosco")]
+        [AllowAnonymous]
+        public async Task<ActionResult<MailControle>> FaleConosco(FaleConoscoEntity faleConoscoEntity)
+        {
+            try
+            {
+                string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
+                string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
+                string nome = "Datamace";
+                string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
+                string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
+
+                string assunto = "";
+
+                switch (faleConoscoEntity.Assunto)
+                {
+                    case "aliancas":
+                        assunto = "Marketing(Alianças e informações sobre produtos e serviços)";
+                        break;
+
+                    case "comercial":
+                        assunto = "Comercial(Agendar uma demonstração e modelos de negócio)";
+                        break;
+
+                    case "treinamento":
+                        assunto = "Treinamento(Para obter mais conhecimento sobre nossas soluções)";
+                        break;
+
+                    case "RH":
+                        assunto = "Recursos Humanos(Para processos seletivos e oportunidades de emprego)";
+                        break;
+
+                    case "administracao":
+                        assunto = "Administração(Para assuntos gerais da administração)";
+                        break;
+
+                    default:
+                        break;
+                }
+
+                string conteudo = $"Olá <b>{nome}</b>, recebemos um contato sobre <b>{assunto}</b> de:<br/><br/>" +
+                        $"<b>Nome</b>: {faleConoscoEntity.Nome}<br/>" +
+                        $"<b>Email</b>: {faleConoscoEntity.Email}<br/>" +
+                        $"<b>Telefone</b>: {faleConoscoEntity.Telefone}<br/>" +
+                        $"<b>Empresa</b>: {faleConoscoEntity.Empresa}<br/>" +
+                        $"<b>Cidade</b>: {faleConoscoEntity.Cidadeselected}<br/>" +
+                        $"<b>Estado</b>: {faleConoscoEntity.EstadoSelected}<br/><br/>" +
+                        $"<b>Mensagem</b>: {faleConoscoEntity.Info}<br/><br/><br/><br/> Att, Datamace";
+
+                MailMessage message = new MailMessage(from, to, "Fale Conosco - www.datamace.com.br", conteudo);
+                message.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port);
+
+                smtp.Credentials = new NetworkCredential(user, pass);
+                await smtp.SendMailAsync(message);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("SejaParceiro")]
+        [AllowAnonymous]
+        public async Task<ActionResult<MailControle>> SejaParceiro(FaleConoscoEntity faleConoscoEntity)
+        {
+            try
+            {
+                string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
+                string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
+                string nome = "Datamace";
+                string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
+                string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
+
+                
+
+                string conteudo = $"Olá <b>{nome}</b>, recebemos um pedido de </b>Seja Parceiro</b> de:<br/><br/>" +
+                        $"<b>Nome</b>: {faleConoscoEntity.Nome}<br/>" +
+                        $"<b>Email</b>: {faleConoscoEntity.Email}<br/>" +
+                        $"<b>Telefone</b>: {faleConoscoEntity.Telefone}<br/>" +
+                        $"<b>Empresa</b>: {faleConoscoEntity.Empresa}<br/>" +
+                        $"<b>Cidade</b>: {faleConoscoEntity.Cidadeselected}<br/>" +
+                        $"<b>Estado</b>: {faleConoscoEntity.EstadoSelected}<br/><br/>" +
+                        $"<b>Info</b>: {faleConoscoEntity.Info}<br/><br/><br/><br/> Att, Datamace";
+
+                MailMessage message = new MailMessage(from, to, "Seja Parceiro - www.datamace.com.br", conteudo);
+                message.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port);
+
+                smtp.Credentials = new NetworkCredential(user, pass);
+                await smtp.SendMailAsync(message);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return Ok();
+        }
+
         private async Task EnviarEmail(MailControle mailControle)
         {
             string emails = "";
@@ -222,8 +330,8 @@ namespace WebDatamaceApi.Controllers
 
                         //using (SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port))
                         //{
-                            smtp.Credentials = new NetworkCredential(user, pass);
-                            tasks.Add(smtp.SendMailAsync(message));
+                        smtp.Credentials = new NetworkCredential(user, pass);
+                        tasks.Add(smtp.SendMailAsync(message));
                         //}
                     }
 
