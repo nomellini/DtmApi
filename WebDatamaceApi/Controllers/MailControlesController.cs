@@ -236,7 +236,6 @@ namespace WebDatamaceApi.Controllers
                 string nome = "Datamace";
                 string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
                 string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
-
                 
 
                 string conteudo = $"Olá <b>{nome}</b>, recebemos um pedido de </b>Seja Parceiro</b> de:<br/><br/>" +
