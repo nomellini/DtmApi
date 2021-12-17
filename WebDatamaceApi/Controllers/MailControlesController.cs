@@ -167,8 +167,7 @@ namespace WebDatamaceApi.Controllers
             try
             {
                 string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                                                            //string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
-                string to = "gabriel.dassie@hotmail.com";
+                string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
 
                 string nome = "Datamace";
                 string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
@@ -236,8 +235,8 @@ namespace WebDatamaceApi.Controllers
             try
             {
                 string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                //string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
-                string to = "gabriel.dassie@hotmail.com";
+                string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
+                //string to = "gabriel.dassie@hotmail.com";
                 string nome = "Datamace";
                 string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
                 string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
