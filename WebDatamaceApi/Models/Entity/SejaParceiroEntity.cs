@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebDatamaceApi.Models.Entity
 {
-    public class FaleConoscoEntity
+    public class SejaParceiroEntity
     {
         public string Nome { get; set; }
         public string Email { get; set; }
@@ -14,8 +14,6 @@ namespace WebDatamaceApi.Models.Entity
         public string Info { get; set; }
         public string EstadoSelected { get; set; }
         public string Cidadeselected { get; set; }
-        public string Assunto { get; set; }
-        public string Qtdefuncionarios { get; set; }
-        public string cargo { get; set; }
+
     }
 }

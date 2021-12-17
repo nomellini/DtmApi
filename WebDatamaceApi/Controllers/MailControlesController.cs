@@ -167,7 +167,9 @@ namespace WebDatamaceApi.Controllers
             try
             {
                 string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
+                                                            //string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
+                string to = "gabriel.dassie@hotmail.com";
+
                 string nome = "Datamace";
                 string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
                 string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
@@ -205,6 +207,8 @@ namespace WebDatamaceApi.Controllers
                         $"<b>Email</b>: {faleConoscoEntity.Email}<br/>" +
                         $"<b>Telefone</b>: {faleConoscoEntity.Telefone}<br/>" +
                         $"<b>Empresa</b>: {faleConoscoEntity.Empresa}<br/>" +
+                        (!string.IsNullOrEmpty(faleConoscoEntity.Qtdefuncionarios) ? $"<b>Funcionáios:</b>: {faleConoscoEntity.Qtdefuncionarios}<br/>" : "") +
+                        (!string.IsNullOrEmpty(faleConoscoEntity.cargo) ? $"<b>Cargo</b>: {faleConoscoEntity.cargo}<br/>" : "") +
                         $"<b>Cidade</b>: {faleConoscoEntity.Cidadeselected}<br/>" +
                         $"<b>Estado</b>: {faleConoscoEntity.EstadoSelected}<br/><br/>" +
                         $"<b>Mensagem</b>: {faleConoscoEntity.Info}<br/><br/><br/><br/> Att, Datamace";
@@ -227,25 +231,26 @@ namespace WebDatamaceApi.Controllers
 
         [HttpPost("SejaParceiro")]
         [AllowAnonymous]
-        public async Task<ActionResult<MailControle>> SejaParceiro(FaleConoscoEntity faleConoscoEntity)
+        public async Task<ActionResult<MailControle>> SejaParceiro(SejaParceiroEntity sejaParceiroEntity)
         {
             try
             {
                 string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
+                //string to = "datamace@datamace.com.br";   // E-mail do destinatário // datamace@datamace.com.br
+                string to = "gabriel.dassie@hotmail.com";
                 string nome = "Datamace";
                 string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
                 string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
-                
+
 
                 string conteudo = $"Olá <b>{nome}</b>, recebemos um pedido de </b>Seja Parceiro</b> de:<br/><br/>" +
-                        $"<b>Nome</b>: {faleConoscoEntity.Nome}<br/>" +
-                        $"<b>Email</b>: {faleConoscoEntity.Email}<br/>" +
-                        $"<b>Telefone</b>: {faleConoscoEntity.Telefone}<br/>" +
-                        $"<b>Empresa</b>: {faleConoscoEntity.Empresa}<br/>" +
-                        $"<b>Cidade</b>: {faleConoscoEntity.Cidadeselected}<br/>" +
-                        $"<b>Estado</b>: {faleConoscoEntity.EstadoSelected}<br/><br/>" +
-                        $"<b>Info</b>: {faleConoscoEntity.Info}<br/><br/><br/><br/> Att, Datamace";
+                        $"<b>Nome</b>: {sejaParceiroEntity.Nome}<br/>" +
+                        $"<b>Email</b>: {sejaParceiroEntity.Email}<br/>" +
+                        $"<b>Telefone</b>: {sejaParceiroEntity.Telefone}<br/>" +
+                        $"<b>Empresa</b>: {sejaParceiroEntity.Empresa}<br/>" +
+                        $"<b>Cidade</b>: {sejaParceiroEntity.Cidadeselected}<br/>" +
+                        $"<b>Estado</b>: {sejaParceiroEntity.EstadoSelected}<br/><br/>" +
+                        $"<b>Info</b>: {sejaParceiroEntity.Info}<br/><br/><br/><br/> Att, Datamace";
 
                 MailMessage message = new MailMessage(from, to, "Seja Parceiro - www.datamace.com.br", conteudo);
                 message.IsBodyHtml = true;
