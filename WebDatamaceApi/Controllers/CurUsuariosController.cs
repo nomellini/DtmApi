@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,10 +24,14 @@ namespace WebDatamaceApi.Controllers
     public class CurUsuariosController : ControllerBase
     {
         private readonly CoreDbContext _context;
+        private readonly NotificationMetadata _notificationMetadata;
 
-        public CurUsuariosController(CoreDbContext context)
+
+        public CurUsuariosController(CoreDbContext context, NotificationMetadata notificationMetadata)
         {
             _context = context;
+            _notificationMetadata = notificationMetadata;
+
         }
 
         // GET: api/CurUsuarios
@@ -564,6 +571,8 @@ namespace WebDatamaceApi.Controllers
                 celular = celular.Substring(2, celular.Length - 2);
 
             }
+
+
             CurUsuarios curUsuarios = new CurUsuarios()
             {
                 IdUsuario = 0,
@@ -586,10 +595,51 @@ namespace WebDatamaceApi.Controllers
                 Telefone = numero
             };
 
+            string senha = GerarSenha();
+            curUsuarios.Senha = CreateMD5(senha);
+
             try
             {
+
                 _context.CurUsuarios.Add(curUsuarios);
                 await _context.SaveChangesAsync();
+
+                string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
+                string to = curUsuarioEntity.Email;   // E-mail do destinatário // datamace@datamace.com.br
+
+                string nome = curUsuarioEntity.Nome;
+                string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
+                string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
+
+                string conteudo = $"Olá <b>{curUsuarioEntity.Nome}</b>, segue seus dados para acesso a <a href='https://www.datamace.com.br/'>Datamace</a>:<br/><br/>" +
+                 $"<b>Nome</b>: {curUsuarioEntity.Nome}<br/>" +
+                 $"<b>Email</b>: {curUsuarioEntity.Email}<br/>" +
+                 $"<b>Senha</b>: {senha}<br/>";
+
+                string template = "informe_on_site";
+
+                if (!template.Equals("sem_template.bmp"))
+                {
+                    using (var sr = new StreamReader("templates/" + template.Replace(".bmp", ".html")))
+                    {
+                        // Read the stream as a string, and write the string to the console.
+                        string templateHtml = sr.ReadToEnd();
+                        if (!String.IsNullOrEmpty(templateHtml))
+                        {
+
+                            conteudo = templateHtml.Replace("{texto_noticia}", conteudo);
+                        }
+                    }
+                }
+
+
+                MailMessage message = new MailMessage(from, to, "Datamace - Dados de acesso", conteudo);
+                message.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port);
+
+                smtp.Credentials = new NetworkCredential(user, pass);
+                await smtp.SendMailAsync(message);
+
 
                 if (curUsuarioEntity.IdTurma != null && curUsuarioEntity.IdTurma > 0)
                 {
@@ -620,6 +670,18 @@ namespace WebDatamaceApi.Controllers
             return CreatedAtAction("GetCurUsuarios", new { id = curUsuarios.IdUsuario }, curUsuarios);
         }
 
+        private string GerarSenha()
+        {
+            // Gera uma senha com 6 caracteres entre numeros e letras
+            string chars = "abcdefghjkmnpqrstuvwxyz023456789";
+            string pass = "";
+            Random random = new Random();
+            for (int f = 0; f < 6; f++)
+            {
+                pass = pass + chars.Substring(random.Next(0, chars.Length - 1), 1);
+            }
+            return pass;
+        }
 
 
         // PUT: api/CurUsuarios
