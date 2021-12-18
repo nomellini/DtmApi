@@ -604,42 +604,45 @@ namespace WebDatamaceApi.Controllers
                 _context.CurUsuarios.Add(curUsuarios);
                 await _context.SaveChangesAsync();
 
-                string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                string to = curUsuarioEntity.Email;   // E-mail do destinatário // datamace@datamace.com.br
-
-                string nome = curUsuarioEntity.Nome;
-                string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
-                string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
-
-                string conteudo = $"Olá <b>{curUsuarioEntity.Nome}</b>, segue seus dados para acesso a <a href='https://www.datamace.com.br/'>Datamace</a>:<br/><br/>" +
-                 $"<b>Nome</b>: {curUsuarioEntity.Nome}<br/>" +
-                 $"<b>Email</b>: {curUsuarioEntity.Email}<br/>" +
-                 $"<b>Senha</b>: {senha}<br/>";
-
-                string template = "informe_on_site";
-
-                if (!template.Equals("sem_template.bmp"))
+                try
                 {
-                    using (var sr = new StreamReader("templates/" + template.Replace(".bmp", ".html")))
-                    {
-                        // Read the stream as a string, and write the string to the console.
-                        string templateHtml = sr.ReadToEnd();
-                        if (!String.IsNullOrEmpty(templateHtml))
-                        {
+                    string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
+                    string to = curUsuarioEntity.Email;   // E-mail do destinatário // datamace@datamace.com.br
 
-                            conteudo = templateHtml.Replace("{texto_noticia}", conteudo);
+                    string nome = curUsuarioEntity.Nome;
+                    string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
+                    string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
+
+                    string conteudo = $"Olá <b>{curUsuarioEntity.Nome}</b>, segue seus dados para acesso a <a href='https://www.datamace.com.br/'>Datamace</a>:<br/><br/>" +
+                     $"<b>Nome</b>: {curUsuarioEntity.Nome}<br/>" +
+                     $"<b>Email</b>: {curUsuarioEntity.Email}<br/>" +
+                     $"<b>Senha</b>: {senha}<br/>";
+
+                    string template = "informe_on_site.html";
+
+                    if (!template.Equals("sem_template.bmp"))
+                    {
+                        using (var sr = new StreamReader("templates/" + template.Replace(".bmp", ".html")))
+                        {
+                            // Read the stream as a string, and write the string to the console.
+                            string templateHtml = sr.ReadToEnd();
+                            if (!String.IsNullOrEmpty(templateHtml))
+                            {
+
+                                conteudo = templateHtml.Replace("{texto_noticia}", conteudo);
+                            }
                         }
                     }
+
+                    MailMessage message = new MailMessage(from, to, "Datamace - Dados de acesso", conteudo);
+                    message.IsBodyHtml = true;
+                    SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port);
+
+                    smtp.Credentials = new NetworkCredential(user, pass);
+                    await smtp.SendMailAsync(message);
+
                 }
-
-
-                MailMessage message = new MailMessage(from, to, "Datamace - Dados de acesso", conteudo);
-                message.IsBodyHtml = true;
-                SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port);
-
-                smtp.Credentials = new NetworkCredential(user, pass);
-                await smtp.SendMailAsync(message);
-
+                catch (Exception) { }
 
                 if (curUsuarioEntity.IdTurma != null && curUsuarioEntity.IdTurma > 0)
                 {
