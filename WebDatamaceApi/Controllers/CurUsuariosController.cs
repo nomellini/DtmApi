@@ -618,7 +618,9 @@ namespace WebDatamaceApi.Controllers
                      $"<b>Email</b>: {curUsuarioEntity.Email}<br/>" +
                      $"<b>Senha</b>: {senha}<br/>";
 
-                    string template = "informe_on_site.html";
+                    //string template = "informe_on_site.html";
+                    string template = "sem_template.bmp";
+
 
                     if (!template.Equals("sem_template.bmp"))
                     {
