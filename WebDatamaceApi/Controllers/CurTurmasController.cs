@@ -37,8 +37,8 @@ namespace WebDatamaceApi.Controllers
                             on turma.IdGrupo equals grupo.IdGrupo
                             join treinamento in _context.Set<CurTreinamento>()
                             on turma.IdTreinamento equals treinamento.IdTreinamento
-                            join instrutor in _context.Set<CurInstrutor>()
-                            on turma.IdInstrutor equals instrutor.IdInstrutor
+                            //join instrutor in _context.Set<CurInstrutor>()
+                            //on turma.IdInstrutor equals instrutor.IdInstrutor
                             where turma.IdTurma == idTurma
                             orderby turma.DataInicio descending
                             select new
@@ -46,7 +46,7 @@ namespace WebDatamaceApi.Controllers
                                 turma,
                                 grupo,
                                 treinamento,
-                                instrutor,
+                                instrutor = _context.CurInstrutor.Where(x=> x.IdInstrutor == turma.IdInstrutor).FirstOrDefault(),
                                 inscritos =
                                 (from curusuariosturmas in _context.Set<CurUsuariosTurmas>()
                                  join curusuarios in _context.Set<CurUsuarios>()
