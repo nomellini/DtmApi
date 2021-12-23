@@ -285,11 +285,19 @@ namespace WebDatamaceApi.Controllers
                 }
                 if (!string.IsNullOrEmpty(mailControle.Produto) && mailControle.Produto != "0")
                 {
-                    var listUser = _context.TbUsuarios.Where(tBusuarios =>
-                    _context.TbUsuariosProdutos.Where(usuariosProdutos => usuariosProdutos.Produto.ToString().Equals(mailControle.Produto.Trim()))
-                    .Select(j => j.Usuario).Contains(tBusuarios.Usuario)).Select(us => us.Email);
+                    if (!mailControle.Produto.Equals("16"))
+                    {
+                        var listUser = _context.TbUsuarios.Where(tBusuarios =>
+                        _context.TbUsuariosProdutos.Where(usuariosProdutos => usuariosProdutos.Produto.ToString().Equals(mailControle.Produto.Trim()))
+                        .Select(j => j.Usuario).Contains(tBusuarios.Usuario)).Select(us => us.Email);
 
-                    emails += String.Join(";", listUser.ToArray());
+                        emails += String.Join(";", listUser.ToArray());
+                    }
+                    else {
+                        var listUser = _context.TbUsuarios.Select(us => us.Email).Distinct();
+
+                        emails += String.Join(";", listUser.ToArray());
+                    }
 
                 }
 
@@ -297,7 +305,7 @@ namespace WebDatamaceApi.Controllers
                 {
                     foreach (var email in emails.Split(";"))
                     {
-                        mailControle.EmailDestinatario = email;
+                        mailControle.EmailDestinatario = "gabriel.dassie@hotmail.com";
                         _queue.Enqueue(mailControle);
                     }
 
