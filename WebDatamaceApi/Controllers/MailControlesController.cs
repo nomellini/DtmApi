@@ -286,7 +286,7 @@ namespace WebDatamaceApi.Controllers
                 if (!string.IsNullOrEmpty(mailControle.Produto) && mailControle.Produto != "0")
                 {
                     var listUser = _context.TbUsuarios.Where(tBusuarios =>
-                    _context.TbUsuariosProdutos.Where(usuariosProdutos => usuariosProdutos.Produto.ToString() == mailControle.Produto)
+                    _context.TbUsuariosProdutos.Where(usuariosProdutos => usuariosProdutos.Produto.ToString().Equals(mailControle.Produto.Trim()))
                     .Select(j => j.Usuario).Contains(tBusuarios.Usuario)).Select(us => us.Email);
 
                     emails += String.Join(";", listUser.ToArray());
