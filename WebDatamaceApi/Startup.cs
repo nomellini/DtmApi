@@ -23,6 +23,8 @@ using System.Net.Mime;
 using WebDatamaceApi.Models.Entity;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http.Features;
+using WebDatamaceApi.Core;
+using WebDatamaceApi.Interface;
 
 namespace WebDatamaceApi
 {
@@ -60,6 +62,8 @@ namespace WebDatamaceApi
             services.AddControllers().AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
+
+            services.AddHostedService<BackgroundWorkerEmail>().AddSingleton<IBackgroundQueue<MailControle>, BackgroundQueue<MailControle>>();
 
             services.Configure<FormOptions>(x =>
             {

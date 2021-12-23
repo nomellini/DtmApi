@@ -11,6 +11,7 @@ using WebDatamaceApi.Models.Entity;
 using System.Net.Mail;
 using System.Net;
 using System.IO;
+using WebDatamaceApi.Interface;
 
 namespace WebDatamaceApi.Controllers
 {
@@ -22,11 +23,15 @@ namespace WebDatamaceApi.Controllers
     {
         private readonly CoreDbContext _context;
         private readonly NotificationMetadata _notificationMetadata;
+        private readonly IBackgroundQueue<MailControle> _queue;
 
-        public MailControlesController(CoreDbContext context, NotificationMetadata notificationMetadata)
+
+        public MailControlesController(CoreDbContext context, NotificationMetadata notificationMetadata, IBackgroundQueue<MailControle> queue)
         {
             _context = context;
             _notificationMetadata = notificationMetadata;
+            _queue = queue;
+
         }
 
         // GET: api/MailControles
@@ -134,23 +139,14 @@ namespace WebDatamaceApi.Controllers
         [HttpPost]
         public async Task<ActionResult<MailControle>> PostMailControle(MailControle mailControle)
         {
-            _context.MailControle.Add(mailControle);
             try
             {
                 await EnviarEmail(mailControle);
 
-                await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (Exception)
             {
-                if (MailControleExists(mailControle.IdControle))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return CreatedAtAction("GetMailControle", new { id = mailControle.IdControle }, mailControle);
@@ -299,50 +295,17 @@ namespace WebDatamaceApi.Controllers
 
                 if (!emails.Equals(""))
                 {
-                    //emails = "gabriel.dassie@hotmail.com;domgabriel20@gmail.com";
-                    List<Task> tasks = new List<Task>();
-
                     foreach (var email in emails.Split(";"))
                     {
                         mailControle.EmailDestinatario = email;
-                        string from = _notificationMetadata.Sender; // E-mail de remetente cadastrado no painel
-                        string to = mailControle.EmailDestinatario;   // E-mail do destinatário
-                        string user = _notificationMetadata.UserName; // Usuário de autenticação do servidor SMTP
-                        string pass = _notificationMetadata.Password;  // Senha de autenticação do servidor SMTP
-                        string conteudo = mailControle.Conteudo;
-                        if (!mailControle.Template.Equals("sem_template.bmp"))
-                        {
-
-                            using (var sr = new StreamReader("templates/" + mailControle.Template.Replace(".bmp", ".html")))
-                            {
-                                // Read the stream as a string, and write the string to the console.
-                                string templateHtml = sr.ReadToEnd();
-                                if (!String.IsNullOrEmpty(templateHtml))
-                                {
-
-                                    conteudo = templateHtml.Replace("{texto_noticia}", conteudo);
-                                }
-                            }
-                        }
-
-
-
-                        MailMessage message = new MailMessage(from, to, mailControle.Tema, conteudo);
-                        message.IsBodyHtml = true;
-                        SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port);
-
-                        //using (SmtpClient smtp = new SmtpClient(_notificationMetadata.SmtpServer, _notificationMetadata.Port))
-                        //{
-                        smtp.Credentials = new NetworkCredential(user, pass);
-                        tasks.Add(smtp.SendMailAsync(message));
-                        //}
+                        _queue.Enqueue(mailControle);
                     }
-
-                    await Task.WhenAll(tasks);
 
                 }
             }
         }
+
+
 
 
 
