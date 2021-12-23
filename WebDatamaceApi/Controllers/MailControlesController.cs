@@ -305,7 +305,7 @@ namespace WebDatamaceApi.Controllers
                 {
                     foreach (var email in emails.Split(";"))
                     {
-                        mailControle.EmailDestinatario = "gabriel.dassie@hotmail.com";
+                        mailControle.EmailDestinatario = email;
                         _queue.Enqueue(mailControle);
                     }
 
